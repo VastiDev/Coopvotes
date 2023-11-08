@@ -1,4 +1,4 @@
-package com.vastidev.coopvotes.domain;
+package com.vastidev.coopvotes.pauta.domain;
 
 import lombok.Getter;
 import lombok.ToString;
