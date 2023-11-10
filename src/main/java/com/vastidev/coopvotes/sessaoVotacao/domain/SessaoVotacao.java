@@ -2,13 +2,20 @@ package com.vastidev.coopvotes.sessaoVotacao.domain;
 
 import com.vastidev.coopvotes.pauta.domain.Pauta;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaRequest;
+import com.vastidev.coopvotes.sessaoVotacao.application.api.VotoRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import java.util.HashMap;
+
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -22,10 +29,17 @@ public class SessaoVotacao {
     private UUID id;
     private UUID idPauta;
     private Integer tempoDuracao;
+    @Enumerated(EnumType.STRING)
     private StatusSessaoVotacao status;
     private LocalDateTime dataAbertura;
     private LocalDateTime dataEncerramento;
 
+    @OneToMany(mappedBy = "sessaoVotacao",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @MapKey(name = "cpfAssociado")
+    private Map<String, VotoPauta> votos;
 
     public SessaoVotacao(SessaoAberturaRequest sessaoAberturaRequest, Pauta pauta) {
         this.idPauta = pauta.getId();
@@ -33,5 +47,19 @@ public class SessaoVotacao {
         this.dataAbertura = LocalDateTime.now();
         this.dataEncerramento = dataAbertura.plusMinutes(this.tempoDuracao);
         this.status = StatusSessaoVotacao.ABERTA;
+        this.votos = new HashMap<>();
+    }
+
+    public VotoPauta recebeVoto(VotoRequest votoRequest){
+        ValidaAssociado(votoRequest.getCpfAssociado());
+        VotoPauta voto = new VotoPauta(this, votoRequest);
+        votos.put(votoRequest.getCpfAssociado(), voto);
+        return voto;
+    }
+
+    private void ValidaAssociado(String cpfAssociado) {
+        if (this.votos.containsKey(cpfAssociado)){
+            throw new RuntimeException("Associado já votou nessa Sessão!");
+        }
     }
 }
