@@ -1,5 +1,6 @@
 package com.vastidev.coopvotes.sessaoVotacao.domain;
 
+import com.vastidev.coopvotes.pauta.domain.Pauta;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,11 +22,16 @@ public class SessaoVotacao {
     private UUID id;
     private UUID idPauta;
     private Integer tempoDuracao;
+    private StatusSessaoVotacao status;
     private LocalDateTime dataAbertura;
+    private LocalDateTime dataEncerramento;
 
-    public SessaoVotacao(SessaoAberturaRequest sessaoAberturaRequest ) {
-        this.idPauta = sessaoAberturaRequest.getIdPauta();
+
+    public SessaoVotacao(SessaoAberturaRequest sessaoAberturaRequest, Pauta pauta) {
+        this.idPauta = pauta.getId();
         this.tempoDuracao = sessaoAberturaRequest.getTempoDuracao().orElse(1);
         this.dataAbertura = LocalDateTime.now();
+        this.dataEncerramento = dataAbertura.plusMinutes(this.tempoDuracao);
+        this.status = StatusSessaoVotacao.ABERTA;
     }
 }
