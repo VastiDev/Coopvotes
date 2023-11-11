@@ -3,10 +3,7 @@ package com.vastidev.coopvotes.sessaoVotacao.application.service;
 import com.vastidev.coopvotes.pauta.application.service.PautaRepository;
 import com.vastidev.coopvotes.pauta.application.service.PautaService;
 import com.vastidev.coopvotes.pauta.domain.Pauta;
-import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaRequest;
-import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaResponse;
-import com.vastidev.coopvotes.sessaoVotacao.application.api.VotoRequest;
-import com.vastidev.coopvotes.sessaoVotacao.application.api.VotoResponse;
+import com.vastidev.coopvotes.sessaoVotacao.application.api.*;
 import com.vastidev.coopvotes.sessaoVotacao.domain.SessaoVotacao;
 import com.vastidev.coopvotes.sessaoVotacao.domain.VotoPauta;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +36,15 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
         sessaoVotacaoRepository.salva(sessao);
         log.info("[finish] SessaoVotacaoApplicationService -  recebeVoto");
         return new VotoResponse(voto) ;
+    }
+
+    @Override
+    public ResultadoSessaoResponse obtemResultado(UUID idSessao) {
+        log.info("[start] SessaoVotacaoApplicationService - obtemResultado ");
+        SessaoVotacao sessao = sessaoVotacaoRepository.buscaPorId(idSessao);
+        ResultadoSessaoResponse resultado = sessao.obtemResultado();
+        sessaoVotacaoRepository.salva(sessao);
+        log.info("[finish] SessaoVotacaoApplicationService - obtemResultado ");
+        return resultado;
     }
 }

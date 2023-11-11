@@ -1,6 +1,7 @@
 package com.vastidev.coopvotes.sessaoVotacao.domain;
 
 import com.vastidev.coopvotes.pauta.domain.Pauta;
+import com.vastidev.coopvotes.sessaoVotacao.application.api.ResultadoSessaoResponse;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaRequest;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.VotoRequest;
 import lombok.AccessLevel;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessaoVotacao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, unique = true, nullable = false)
@@ -49,6 +51,8 @@ public class SessaoVotacao {
         this.status = StatusSessaoVotacao.ABERTA;
         this.votos = new HashMap<>();
     }
+
+
 
     public VotoPauta recebeVoto(VotoRequest votoRequest){
         validaSessaoAberta();
@@ -81,5 +85,26 @@ public class SessaoVotacao {
         if (this.votos.containsKey(cpfAssociado)){
             throw new RuntimeException("Associado já votou nessa Sessão!");
         }
+    }
+    public ResultadoSessaoResponse obtemResultado(){
+        atualizaStatus();
+        return new ResultadoSessaoResponse(this);
+    }
+
+    public Long getTotalVotos() {
+        return Long.valueOf(this.votos.size());
+    }
+
+    public Long getTotalSim() {
+       return calculaVotosPorOpcao(OpcaoVoto.SIM);
+    }
+
+    public Long getTotalNao() {
+        return calculaVotosPorOpcao(OpcaoVoto.NAO);
+    }
+    private Long calculaVotosPorOpcao(OpcaoVoto opcaoVoto) {
+        return votos.values().stream()
+                .filter(voto -> voto.opcaoIgual(opcaoVoto))
+                .count();
     }
 }

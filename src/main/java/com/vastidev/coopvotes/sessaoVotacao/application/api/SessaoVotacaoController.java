@@ -29,4 +29,12 @@ public class SessaoVotacaoController implements SessaoVotacaoAPI {
         log.info("[finish] SessaovotacaoController - recebeVoto ");
         return votoResponse;
     }
+
+    @Override
+    public ResultadoSessaoResponse obtemResultado(UUID idSessao) {
+        log.info("[start] SessaovotacaoController - obtemResultado ");
+        ResultadoSessaoResponse resultado = sessaoVotacaoService.obtemResultado(idSessao);
+        log.info("[finish] SessaovotacaoController - obtemResultado ");
+        return resultado;
+    }
 }
