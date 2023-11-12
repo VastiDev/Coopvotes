@@ -99,6 +99,7 @@ public class SessaoVotacao {
        return calculaVotosPorOpcao(OpcaoVoto.SIM);
     }
 
+
     public Long getTotalNao() {
         return calculaVotosPorOpcao(OpcaoVoto.NAO);
     }

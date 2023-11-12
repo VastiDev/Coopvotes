@@ -1,5 +1,6 @@
 package com.vastidev.coopvotes.sessaoVotacao.application.service;
 
+import com.vastidev.coopvotes.associado.application.service.AssociadoService;
 import com.vastidev.coopvotes.pauta.application.service.PautaRepository;
 import com.vastidev.coopvotes.pauta.application.service.PautaService;
 import com.vastidev.coopvotes.pauta.domain.Pauta;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     private final SessaoVotacaoRepository sessaoVotacaoRepository;
     private final PautaService pautaService;
+    private final AssociadoService associadoService;
 
     @Override
     public SessaoAberturaResponse abreSessao(SessaoAberturaRequest sessaoAberturaRequest) {
