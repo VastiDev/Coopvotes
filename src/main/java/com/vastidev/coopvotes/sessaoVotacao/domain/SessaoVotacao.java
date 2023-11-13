@@ -1,5 +1,6 @@
 package com.vastidev.coopvotes.sessaoVotacao.domain;
 
+import com.vastidev.coopvotes.associado.application.service.AssociadoService;
 import com.vastidev.coopvotes.pauta.domain.Pauta;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.ResultadoSessaoResponse;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.SessaoAberturaRequest;
@@ -54,9 +55,9 @@ public class SessaoVotacao {
 
 
 
-    public VotoPauta recebeVoto(VotoRequest votoRequest){
+    public VotoPauta recebeVoto(VotoRequest votoRequest, AssociadoService associadoService){
         validaSessaoAberta();
-        ValidaAssociado(votoRequest.getCpfAssociado());
+        validaAssociado(votoRequest.getCpfAssociado(), associadoService);
         VotoPauta voto = new VotoPauta(this, votoRequest);
         votos.put(votoRequest.getCpfAssociado(), voto);
         return voto;
@@ -80,8 +81,13 @@ public class SessaoVotacao {
     /*private void fechaSessao() {
         this.status = StatusSessaoVotacao.FECHADA;
     }*/
+    private void validaAssociado(String cpfAssociado, AssociadoService associadoService){
+        associadoService.validaAssociaddoAptoVoto(cpfAssociado);
+        validaVotoDuplicado(cpfAssociado);
 
-    private void ValidaAssociado(String cpfAssociado) {
+    }
+
+    private void validaVotoDuplicado(String cpfAssociado) {
         if (this.votos.containsKey(cpfAssociado)){
             throw new RuntimeException("Associado já votou nessa Sessão!");
         }

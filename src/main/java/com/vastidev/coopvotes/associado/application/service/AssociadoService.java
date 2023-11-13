@@ -1,4 +1,5 @@
 package com.vastidev.coopvotes.associado.application.service;
 
-public class AssociadoService {
+public interface AssociadoService {
+    void validaAssociaddoAptoVoto(String cpfAssociado);
 }

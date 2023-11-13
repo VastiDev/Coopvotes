@@ -1,7 +1,6 @@
 package com.vastidev.coopvotes.sessaoVotacao.application.service;
 
 import com.vastidev.coopvotes.associado.application.service.AssociadoService;
-import com.vastidev.coopvotes.pauta.application.service.PautaRepository;
 import com.vastidev.coopvotes.pauta.application.service.PautaService;
 import com.vastidev.coopvotes.pauta.domain.Pauta;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.*;
@@ -34,7 +33,7 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     public VotoResponse recebeVoto(UUID idSessao, VotoRequest novoVoto) {
         log.info("[start] SessaoVotacaoApplicationService -  recebeVoto");
         SessaoVotacao sessao = sessaoVotacaoRepository.buscaPorId(idSessao);
-        VotoPauta voto = sessao.recebeVoto(novoVoto);
+        VotoPauta voto = sessao.recebeVoto(novoVoto, associadoService);
         sessaoVotacaoRepository.salva(sessao);
         log.info("[finish] SessaoVotacaoApplicationService -  recebeVoto");
         return new VotoResponse(voto) ;
