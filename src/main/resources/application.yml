@@ -2,3 +2,8 @@ server:
   servlet:
     context-path: /coopvotes
 
+logging:
+  level:
+    com:
+      vastidev:
+        coopvotes: ${LOG_LEVEL:INFO}
