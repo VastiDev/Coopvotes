@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @ToString
 public class ResultadoSessaoResponse {
-    private UUID id;
+    private UUID idSessao;
     private UUID idPauta;
     private StatusSessaoVotacao status;
     private LocalDateTime momentoAbertura;
@@ -23,7 +23,7 @@ public class ResultadoSessaoResponse {
     private Long Totalnao;
 
     public ResultadoSessaoResponse(SessaoVotacao sessao) {
-        this.id = sessao.getId();
+        this.idSessao = sessao.getId();
         this.idPauta = sessao.getIdPauta();
         this.status = sessao.getStatus();
         this.momentoAbertura = sessao.getMomentoAbertura();

@@ -4,6 +4,7 @@ import com.vastidev.coopvotes.associado.application.service.AssociadoService;
 import com.vastidev.coopvotes.pauta.application.service.PautaService;
 import com.vastidev.coopvotes.pauta.domain.Pauta;
 import com.vastidev.coopvotes.sessaoVotacao.application.api.*;
+import com.vastidev.coopvotes.sessaoVotacao.domain.PublicadorResultadoSessao;
 import com.vastidev.coopvotes.sessaoVotacao.domain.SessaoVotacao;
 import com.vastidev.coopvotes.sessaoVotacao.domain.VotoPauta;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     private final SessaoVotacaoRepository sessaoVotacaoRepository;
     private final PautaService pautaService;
     private final AssociadoService associadoService;
+    private final PublicadorResultadoSessao publicadorResultadoSessao;
 
     @Override
     public SessaoAberturaResponse abreSessao(SessaoAberturaRequest sessaoAberturaRequest) {
@@ -33,7 +35,7 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     public VotoResponse recebeVoto(UUID idSessao, VotoRequest novoVoto) {
         log.info("[start] SessaoVotacaoApplicationService -  recebeVoto");
         SessaoVotacao sessao = sessaoVotacaoRepository.buscaPorId(idSessao);
-        VotoPauta voto = sessao.recebeVoto(novoVoto, associadoService);
+        VotoPauta voto = sessao.recebeVoto(novoVoto, associadoService, publicadorResultadoSessao);
         sessaoVotacaoRepository.salva(sessao);
         log.info("[finish] SessaoVotacaoApplicationService -  recebeVoto");
         return new VotoResponse(voto) ;
@@ -43,7 +45,7 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     public ResultadoSessaoResponse obtemResultado(UUID idSessao) {
         log.info("[start] SessaoVotacaoApplicationService - obtemResultado ");
         SessaoVotacao sessao = sessaoVotacaoRepository.buscaPorId(idSessao);
-        ResultadoSessaoResponse resultado = sessao.obtemResultado();
+        ResultadoSessaoResponse resultado = sessao.obtemResultado(publicadorResultadoSessao);
         sessaoVotacaoRepository.salva(sessao);
         log.info("[finish] SessaoVotacaoApplicationService - obtemResultado ");
         return resultado;
