@@ -6,7 +6,7 @@ logging:
   level:
     com:
       vastidev:
-        coopvotes: ${LOG_LEVEL:INFO}
+        coopvotes: ${LOG_LEVEL:DEBUG}
 
 spring:
   datasource:
